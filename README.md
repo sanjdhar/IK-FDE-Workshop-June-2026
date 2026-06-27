@@ -19,7 +19,9 @@ This guide covers both **macOS** and **Windows** (via Git Bash). Wherever a step
 
 Before you start, make sure you have:
 
-- **Docker Desktop** installed and running. Docker packages OpenClaw and its dependencies into an isolated container so it doesn't touch your host machine directly — this is the safest way to run it.
+- **Docker Desktop** installed and running. Depending on how you setup Docker Desktop it may not be running even if installed. Make sure you start up Docker Desktop and confirm its running. From a command window you can run ```docker ps``` and it should not return any errors.
+
+Docker packages OpenClaw and its dependencies into an isolated container so it doesn't touch your host machine directly — this is the safest way to run it.
 - **An API key from an LLM provider.** Any one of the following works: OpenAI, Anthropic, Google Gemini, OpenRouter, or another OpenAI-compatible provider. You'll paste this key in during setup, so have it copied somewhere handy.
 
 > **Expected cost:** Running through this workshop typically costs around **$2–$5** in API usage, depending on which provider and model you choose. **Advanced users** who want to avoid API costs entirely can skip the hosted provider and instead point OpenClaw at a **local model** via **Ollama** or **Docker Model Runner** — both run the model on your own machine at no per-token cost.
@@ -69,8 +71,14 @@ From inside the cloned `openclaw` folder, run:
 ```bash
 bash scripts/docker/setup.sh
 ```
+This builds the gateway image locally. If you run into any issues or erroors, you can use a pre-built image instead as a fall-back option: 
 
-This kicks off an interactive setup wizard inside the Docker container. It will:
+```bash
+export OPENCLAW_IMAGE="ghcr.io/openclaw/openclaw:latest"
+./scripts/docker/setup.sh
+```
+
+The setup kicks off an interactive setup wizard inside the Docker container. It will:
 
 1. Build the OpenClaw Docker image.
 > This can take 5-10 minutes and will be a good time for a coffee/bio break
@@ -88,13 +96,13 @@ When prompted for **Model/auth provider**, select whichever LLM provider you hav
 
 ### Step 2b: Skip Optional Extras
 
-The wizard will also ask about web search, skill dependencies, and hooks. For this workshop, it's fine to select **Skip for now** on all of these — they aren't required to complete the website automation exercise.
+The wizard will also ask about web search, skill dependencies, hooks, and other integrations like Slack, etc. For this workshop, it's fine to select **Skip for now** on all of these — they aren't required to complete the website automation exercise.
 
 ---
 
 ## Step 3: Locate Your Gateway Token
 
-OpenClaw's setup writes your gateway authentication token to disk. You'll want this token to run health checks, log into the local dashboard, and complete Step 4 below.
+OpenClaw's setup writes your gateway authentication token to disk. You'll want this token to run health checks, log into the local dashboard, and complete the remaining steps.
 
 ### Primary method: the `.env` file
 
@@ -110,7 +118,7 @@ Open it (in a text editor, or with `cat .env` from inside the `openclaw` folder)
 OPENCLAW_GATEWAY_TOKEN=<your-token-here>
 ```
 
-Copy the value after the `=` sign — that's your gateway token.
+Copy the value after the `OPENCLAW_GATEWAY_TOKEN=` — that's your gateway token. Keep this copied in your clipboard or in Notepad/TextEdit app. We will feed this token to your agent via the web UI setup later. Treat this token like a password.
 
 ### Backup method: `openclaw.json`
 
